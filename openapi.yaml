@@ -1,0 +1,75 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Samples service
+  description: |
+    A sample specification, implemented in the samples:service-sample module
+  contact:
+    email: team-not-relevant@foo.com
+    name: Not Relevant Team
+
+tags:
+  - name: Samples
+    description: Different samples
+
+servers:
+  - url: http://samples.devx:8080
+
+paths:
+  /samples:
+    post:
+      operationId: createSample
+      description: Create a sample
+      tags:
+        - Samples
+      requestBody:
+        required: true
+        description: The sample creation request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Sample'
+      responses:
+        '201':
+          description: Null response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Sample"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "../../common/errors.yml#/components/schemas/MalformedRequestError"
+  /samples/{sample_name}:
+    get:
+      operationId: showSampleByName
+      description: Info for a specific sample
+      tags:
+        - Samples
+      parameters:
+        - name: sample_name
+          in: path
+          required: true
+          description: The name of the sample to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Sample"
+components:
+  schemas:
+    Sample:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        tag:
+          type: string
